@@ -9,6 +9,7 @@ A TypeScript Node.js project with Claude AI Recipe Search Agent.
 - 🔄 **Conversation History** - Maintains context throughout your conversation
 - 💰 **Cost-Optimized** - Uses Claude 3 Haiku model and smart token management to minimize API costs
 - ⚡ **Quick Recipe Lookup** - Single-query mode for the fastest and cheapest recipe searches
+- 🔒 **Security-Focused** - Input validation, sanitized errors, and secure API key management
 
 ## Getting Started
 
@@ -160,6 +161,29 @@ npm run watch
 ### Pricing Reference (Claude 3 Haiku)
 - Input: $0.25 per million tokens
 - Output: $1.25 per million tokens
+
+---
+
+## 🔒 Security
+
+This application implements several security best practices:
+
+- ✅ **Secure API Key Storage** - Keys stored in `.env` (never committed to git)
+- ✅ **Input Validation** - Query length limits and sanitization
+- ✅ **Error Sanitization** - User-friendly errors (no internal details exposed)
+- ✅ **No Vulnerabilities** - All dependencies audited (0 known vulnerabilities)
+- ✅ **Type Safety** - TypeScript strict mode enabled
+
+For detailed security information, see:
+- `SECURITY-AUDIT.md` - Complete security audit report
+- `SECURITY.md` - Security guidelines and best practices
+
+### Security Best Practices:
+1. Never commit your `.env` file
+2. Rotate API keys regularly (every 90 days)
+3. Use separate API keys for development and production
+4. Monitor API usage in Anthropic console
+5. Set up billing alerts to prevent unexpected charges
 
 ## Technologies
 

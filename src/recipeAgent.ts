@@ -5,6 +5,14 @@ import * as dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
+// Security: Validate API key exists on startup
+if (!process.env.ANTHROPIC_API_KEY) {
+  console.error('❌ Error: ANTHROPIC_API_KEY not found in environment variables.');
+  console.error('Please create a .env file with your API key.');
+  console.error('See .env.example for template.\n');
+  process.exit(1);
+}
+
 // Initialize Claude client
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -39,10 +47,22 @@ class RecipeSearchAgent {
   }
 
   async searchRecipe(query: string): Promise<string> {
+    // Security: Input validation
+    if (!query || query.trim().length === 0) {
+      return 'Error: Query cannot be empty.';
+    }
+    
+    if (query.length > 2000) {
+      return 'Error: Query too long. Please limit to 2000 characters.';
+    }
+
+    // Sanitize: Remove any null bytes or control characters
+    const sanitizedQuery = query.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
+
     // Add user message to history
     this.conversationHistory.push({
       role: 'user',
-      content: query,
+      content: sanitizedQuery,
     });
 
     // Trim history to save tokens (keep only recent turns)
@@ -51,8 +71,8 @@ class RecipeSearchAgent {
     }
 
     // If history disabled, only keep current query
-    const messages = this.config.enableHistory 
-      ? this.conversationHistory 
+    const messages = this.config.enableHistory
+      ? this.conversationHistory
       : [this.conversationHistory[this.conversationHistory.length - 1]];
 
     try {
@@ -81,7 +101,18 @@ class RecipeSearchAgent {
       return assistantMessage;
     } catch (error) {
       if (error instanceof Error) {
-        return `Error: ${error.message}`;
+        // Security: Sanitize error messages - don't expose full API errors
+        if (error.message.includes('credit balance')) {
+          return 'Error: Insufficient API credits. Please check your Anthropic account.';
+        }
+        if (error.message.includes('rate limit')) {
+          return 'Error: Rate limit exceeded. Please wait a moment and try again.';
+        }
+        if (error.message.includes('401') || error.message.includes('authentication')) {
+          return 'Error: Authentication failed. Please check your API key.';
+        }
+        // Generic error for other cases
+        return 'Error: Unable to process request. Please try again later.';
       }
       return 'An unknown error occurred.';
     }
@@ -98,7 +129,7 @@ class RecipeSearchAgent {
       (this.totalInputTokens / 1_000_000) * 0.25 +
       (this.totalOutputTokens / 1_000_000) * 1.25
     ).toFixed(6);
-    
+
     return {
       input: this.totalInputTokens,
       output: this.totalOutputTokens,
