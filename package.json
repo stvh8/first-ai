@@ -1,20 +1,28 @@
 {
   "name": "typescript-nodejs-project",
   "version": "1.0.0",
-  "description": "A TypeScript Node.js project",
+  "description": "A TypeScript Node.js project with Claude AI recipe search",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "recipe": "ts-node src/recipeAgent.ts"
   },
   "keywords": [
     "typescript",
-    "nodejs"
+    "nodejs",
+    "claude",
+    "ai",
+    "recipes"
   ],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0",
+    "dotenv": "^16.4.5"
+  },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "ts-node": "^10.9.2",
