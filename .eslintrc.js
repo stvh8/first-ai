@@ -18,12 +18,12 @@ module.exports = {
   rules: {
     // Prettier integration
     'prettier/prettier': 'error',
-    
+
     // TypeScript specific rules
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-    
+
     // General code quality rules
     'no-console': 'off', // We use console for CLI
     'no-debugger': 'error',
@@ -34,7 +34,7 @@ module.exports = {
     'eol-last': ['error', 'always'],
     'semi': ['error', 'always'],
     'quotes': ['error', 'single', { avoidEscape: true }],
-    
+
     // Security rules
     'no-eval': 'error',
     'no-implied-eval': 'error',
