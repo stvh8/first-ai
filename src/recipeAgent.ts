@@ -51,7 +51,7 @@ class RecipeSearchAgent {
     if (!query || query.trim().length === 0) {
       return 'Error: Query cannot be empty.';
     }
-    
+
     if (query.length > 2000) {
       return 'Error: Query too long. Please limit to 2000 characters.';
     }

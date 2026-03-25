@@ -40,7 +40,7 @@ async function testAPIConnection() {
     console.log(`   Input: ${response.usage.input_tokens} tokens`);
     console.log(`   Output: ${response.usage.output_tokens} tokens`);
     console.log(`   Total: ${response.usage.input_tokens + response.usage.output_tokens} tokens`);
-    
+
     const cost = (
       (response.usage.input_tokens / 1_000_000) * 0.25 +
       (response.usage.output_tokens / 1_000_000) * 1.25
@@ -51,13 +51,13 @@ async function testAPIConnection() {
 
   } catch (error: any) {
     console.error('❌ API Error:\n');
-    
+
     if (error.status === 401) {
       console.error('Authentication failed. Your API key may be invalid.');
       console.error('Please check: https://console.anthropic.com/settings/keys\n');
     } else if (error.status === 400) {
       console.error('Bad Request. Details:', error.message);
-      
+
       if (error.message.includes('credit balance')) {
         console.error('\n💡 Troubleshooting steps:');
         console.error('1. Wait 2-5 minutes for credits to propagate');
@@ -72,7 +72,7 @@ async function testAPIConnection() {
       console.error('Status code:', error.status);
       console.error('\nFull error:', error, '\n');
     }
-    
+
     process.exit(1);
   }
 }
