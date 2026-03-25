@@ -15,7 +15,7 @@ A TypeScript Node.js project with Claude AI Recipe Search Agent.
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js (v24 or higher) - **This project uses Node 24**
 - npm or yarn
 - Anthropic API Key (get one at https://console.anthropic.com/)
 
@@ -119,6 +119,36 @@ Compile TypeScript in watch mode:
 npm run watch
 ```
 
+### Code Quality
+
+#### Linting
+
+Check code for issues:
+
+```bash
+npm run lint
+```
+
+Auto-fix linting issues:
+
+```bash
+npm run lint:fix
+```
+
+#### Formatting
+
+Format code with Prettier:
+
+```bash
+npm run format
+```
+
+Check if code is formatted:
+
+```bash
+npm run format:check
+```
+
 ## Project Structure
 
 ```
@@ -188,6 +218,8 @@ For detailed security information, see:
 ## Technologies
 
 - **TypeScript** - Type-safe JavaScript
-- **Node.js** - JavaScript runtime
+- **Node.js 24** - JavaScript runtime (latest LTS)
 - **Claude AI (Anthropic)** - Advanced AI assistant for recipe recommendations
 - **dotenv** - Environment variable management
+- **ESLint** - Code linting and quality checks
+- **Prettier** - Automatic code formatting

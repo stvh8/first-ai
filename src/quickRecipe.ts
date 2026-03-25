@@ -51,19 +51,15 @@ async function quickRecipeLookup(query: string): Promise<void> {
       ],
     });
 
-    const answer = response.content[0].type === 'text'
-      ? response.content[0].text
-      : 'Could not process request.';
+    const answer =
+      response.content[0].type === 'text' ? response.content[0].text : 'Could not process request.';
 
     console.log(`🤖 Claude:\n${answer}\n`);
 
     // Show cost info
     const inputTokens = response.usage.input_tokens;
     const outputTokens = response.usage.output_tokens;
-    const cost = (
-      (inputTokens / 1_000_000) * 0.25 +
-      (outputTokens / 1_000_000) * 1.25
-    ).toFixed(6);
+    const cost = ((inputTokens / 1_000_000) * 0.25 + (outputTokens / 1_000_000) * 1.25).toFixed(6);
 
     console.log(`\n💰 Cost: $${cost} (${inputTokens + outputTokens} tokens)\n`);
   } catch (error) {

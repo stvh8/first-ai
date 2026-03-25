@@ -66,7 +66,10 @@ class RecipeSearchAgent {
     });
 
     // Trim history to save tokens (keep only recent turns)
-    if (this.config.enableHistory && this.conversationHistory.length > this.config.maxHistoryTurns * 2) {
+    if (
+      this.config.enableHistory &&
+      this.conversationHistory.length > this.config.maxHistoryTurns * 2
+    ) {
       this.conversationHistory = this.conversationHistory.slice(-this.config.maxHistoryTurns * 2);
     }
 
@@ -88,9 +91,10 @@ class RecipeSearchAgent {
       this.totalInputTokens += response.usage.input_tokens;
       this.totalOutputTokens += response.usage.output_tokens;
 
-      const assistantMessage = response.content[0].type === 'text'
-        ? response.content[0].text
-        : 'Sorry, I could not process that request.';
+      const assistantMessage =
+        response.content[0].type === 'text'
+          ? response.content[0].text
+          : 'Sorry, I could not process that request.';
 
       // Add assistant response to history
       this.conversationHistory.push({

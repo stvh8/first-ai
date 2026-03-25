@@ -14,7 +14,10 @@ async function testAPIConnection() {
   }
 
   // Security: Display only minimal API key info
-  console.log('✓ API Key found:', apiKey.substring(0, 7) + '***' + apiKey.substring(apiKey.length - 4) + '\n');
+  console.log(
+    '✓ API Key found:',
+    apiKey.substring(0, 7) + '***' + apiKey.substring(apiKey.length - 4) + '\n'
+  );
 
   const client = new Anthropic({
     apiKey: apiKey,
@@ -35,7 +38,10 @@ async function testAPIConnection() {
     });
 
     console.log('✅ SUCCESS! API is working correctly.\n');
-    console.log('Response:', response.content[0].type === 'text' ? response.content[0].text : 'N/A');
+    console.log(
+      'Response:',
+      response.content[0].type === 'text' ? response.content[0].text : 'N/A'
+    );
     console.log('\n📊 Token Usage:');
     console.log(`   Input: ${response.usage.input_tokens} tokens`);
     console.log(`   Output: ${response.usage.output_tokens} tokens`);
@@ -48,29 +54,39 @@ async function testAPIConnection() {
     console.log(`   Cost: $${cost}\n`);
 
     console.log('✓ Your API key has active credits and is ready to use!\n');
-
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ API Error:\n');
 
-    if (error.status === 401) {
-      console.error('Authentication failed. Your API key may be invalid.');
-      console.error('Please check: https://console.anthropic.com/settings/keys\n');
-    } else if (error.status === 400) {
-      console.error('Bad Request. Details:', error.message);
+    // Type guard for error with status property
+    const isAPIError = (err: unknown): err is { status: number; message: string } => {
+      return typeof err === 'object' && err !== null && 'status' in err && 'message' in err;
+    };
 
-      if (error.message.includes('credit balance')) {
-        console.error('\n💡 Troubleshooting steps:');
-        console.error('1. Wait 2-5 minutes for credits to propagate');
-        console.error('2. Verify credits at: https://console.anthropic.com/settings/billing');
-        console.error('3. Make sure you added credits to the correct account/workspace');
-        console.error('4. Try generating a new API key if issue persists\n');
+    if (isAPIError(error)) {
+      if (error.status === 401) {
+        console.error('Authentication failed. Your API key may be invalid.');
+        console.error('Please check: https://console.anthropic.com/settings/keys\n');
+      } else if (error.status === 400) {
+        console.error('Bad Request. Details:', error.message);
+
+        if (error.message.includes('credit balance')) {
+          console.error('\n💡 Troubleshooting steps:');
+          console.error('1. Wait 2-5 minutes for credits to propagate');
+          console.error('2. Verify credits at: https://console.anthropic.com/settings/billing');
+          console.error('3. Make sure you added credits to the correct account/workspace');
+          console.error('4. Try generating a new API key if issue persists\n');
+        }
+      } else if (error.status === 429) {
+        console.error('Rate limit exceeded. Please wait a moment and try again.\n');
+      } else {
+        console.error('Unexpected error:', error.message);
+        console.error('Status code:', error.status);
+        console.error('\nFull error:', error, '\n');
       }
-    } else if (error.status === 429) {
-      console.error('Rate limit exceeded. Please wait a moment and try again.\n');
+    } else if (error instanceof Error) {
+      console.error('Error:', error.message);
     } else {
-      console.error('Unexpected error:', error.message);
-      console.error('Status code:', error.status);
-      console.error('\nFull error:', error, '\n');
+      console.error('Unknown error occurred');
     }
 
     process.exit(1);
